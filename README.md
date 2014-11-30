@@ -1,3 +1,4 @@
 bioinfo
 =======
-This is my julia code written for the Bioinformatics Algorithms class on coursera.org
+These are my julia and R scripts written for the Bioinformatics Algorithms class on coursera.org
+
