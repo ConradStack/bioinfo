@@ -1,0 +1,78 @@
+
+require(Biostrings)
+
+# ksize = 3
+# test = c("AAATTGACGCAT",
+# "GACGACCACGTT",
+# "CGTCAGCGCCTG",
+# "GCTGAGCACCGG",
+# "AGTACGGGACAG")
+# kscore[which(ktry=="GAC")] == 2
+
+ksize = 6
+# test = c("TGATGATAACGTGACGGGACTCAGCGGCGATGAAGGATGAGT",
+# "CAGCGACAGACAATTTCAATAATATCCGCGGTAAGCGGCGTA",
+# "TGCAGAGGTTGGTAACGCCGGCGACTCGGAGAGCTTTTCGCT",
+# "TTTGTCATGAACTCAGATACCATAGAGCACCGGCGAGACTCA",
+# "ACTGGGACTTCACATTAGGTTGAACCGCGAGCCAGGTGGGTG",
+# "TTGCGGACGGGATACTCAATAACTAAGGTAGTTCAGCTGCGA",
+# "TGGGAGGACACACATTTTCTTACCTCTTCCCAGCGAGATGGC",
+# "GAAAAAACCTATAAAGTCCACTCTTTGCGGCGGCGAGCCATA",
+# "CCACGTCCGTTACTCCGTCGCCGTCAGCGATAATGGGATGAG",
+# "CCAAAGCTGCGAAATAACCATACTCTGCTCAGGAGCCCGATG")
+test=c("GCGTCCGCTTATCGTCCGTTGTGAATAGCCGAAGTATTCTGT",
+"CTAGCACTTGTAGGGGGTTACTGATAAGTAGCCTAGCAGAGC",
+"AGCTGTCTCAAGGAAGTAGTGGCGACAAATGGGATTTGGCAG",
+"ATTATAAGCTTACAGTTGATTATACAAGTATGCAGGTGGTGT",
+"GTCCTCCTTACCGTACAAGTCGCCTGCATTCCCAACCAAGTA",
+"GCCCCTCACAGCGGTACCAGTCGGCAGCCGGAAGTAGATGGT",
+"TGCGTCGGAACCTAAGTACTTCCTTGCAATAGTATGGTATGG",
+"AAGGTAGCGCTGGTGCGCCATGTGTATGCTAAAGTACTATTG",
+"CAAGTAACGTGTCCTACGATCTGCGATACCCTGATGATAACC",
+"CTCCCCGGCGGTAAAGTATCTGGACACTCCCAGGTGTTGGGT")
+
+ksize = 7
+test = 
+c("CTCGATGAGTAGGAAAGTAGTTTCACTGGGCGAACCACCCCGGCGCTAATCCTAGTGCCC",
+"GCAATCCTACCCGAGGCCACATATCAGTAGGAACTAGAACCACCACGGGTGGCTAGTTTC",
+"GGTGTTGAACCACGGGGTTAGTTTCATCTATTGTAGGAATCGGCTTCAAATCCTACACAG")
+
+
+aleph = c("A","C","G","T")
+
+kdict <- function(dna,ksize){
+	nout = nchar(dna)-ksize+1
+	nvec = character(nout)
+	for(ii in seq( nout ))
+		nvec[ii] <-substring(dna,ii,ii+ksize-1)
+	nvec
+}
+
+d<-function(dna,pat){
+	#nmismatch(pairwiseAlignment(pat,dna,type="global-local",gapOpening=-999))
+	test = nmismatch(pat,matchPattern(pat,dna, ceiling(ksize/2) ))
+	#test = nmismatch(pat,matchPattern(pat,dna, ksize-1 ))
+	if(length(test)==0) { ksize } else { min(test) }
+}
+
+dd<-function(pat1,dnas){
+	sum(sapply(dnas,d,pat=pat1))
+}
+
+
+ktmp = sapply(test,kdict,ksize=ksize, simplify=FALSE)
+ktry = unique(unlist(ktmp))
+
+# ktmp = list()
+# for(i in 1:ksize)
+# 	ktmp = append(ktmp,list(aleph))
+
+#ktry = apply(expand.grid(ktmp),1,paste,collapse="")
+#ktry = sample(ktry,100)
+kscore = sapply(ktry,dd,dnas=test)
+
+ktry[which.min(kscore)]
+kscore[which.min(kscore)]
+
+#dd("CGGCGA",test)
+

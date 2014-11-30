@@ -1,0 +1,84 @@
+
+##########################################
+# Most frequent k-mers, with up to d mismatches 
+#
+
+require("/Users/conrad/courses/BioinformaticsOne/src/kmer.jl")
+require("/Users/conrad/courses/BioinformaticsOne/src/seq.jl")
+
+
+genome = "ACGTTGCATGTCGCATGATGCATGAGAGCT"
+kmer = repeat("N",4)
+dmax = 1
+
+
+genome = "CACAGTAGGCGCCGGCACACACAGCCCCGGGCCCCGGGCCGCCCCGGGCCGGCGGCCGCCGGCGCCGGCACACCGGCACAGCCGTACCGGCACAGTAGTACCGGCCGGCCGGCACACCGGCACACCGGGTACACACCGGGGCGCACACACAGGCGGGCGCCGGGCCCCGGGCCGTACCGGGCCGCCGGCGGCCCACAGGCGCCGGCACAGTACCGGCACACACAGTAGCCCACACACAGGCGGGCGGTAGCCGGCGCACACACACACAGTAGGCGCACAGCCGCCCACACACACCGGCCGGCCGGCACAGGCGGGCGGGCGCACACACACCGGCACAGTAGTAGGCGGCCGGCGCACAGCC"
+kmer = repeat("N",10)
+dmax = 2
+
+genome="CTCATGGGTCTGGGCACCTTGCATGGGCACCTTTGGGCATGGTGGGCACTCATGGCTCATGGGCACTCAGCAGTCGCACTCACTCATGGGTCGTCCTCAGTCCCTTGCAGTCTGGTGGCTCAGTCCTCAGCACCTTCCTTCTCACTCAGTCGCAGTCCCTTCTCATGGGCATGGTGGCCTTGCAGCATGGTGGTGGCCTTCTCACTCAGCACCTTCTCAGTCTGGCTCAGCAGTCCTCACTCAGCAGTCTGGGCATGGGTCCCTTTGGCTCACCTTCTCACCTTTGGGTCTGGCTCAGTCTGGCTCATGGCCTTCCTTCTCA"
+kmer = repeat("N",9)
+dmax = 2
+
+genome="CTCCTTACTTACTTACATTGGTAGTCATCTTACATTGGCTCTAGTTAGTCTCCTCTAGTCATCATCTTACTTACTTACTCCTCTAGTCTCTGGCTCTGGCTCTAGTCTCTAGTTGGTAGTCATCTCCTTACTTACATTAGTTGGCTTACATCTCCTCCATCTCTGGTGGCTTACATTAGTTGGCTTATAGTCATTGGCTTACTCTGGCTTATAGTCTCCATCTTACTTATGGCATTAGTTAGTCATTAGTTAGTCTCCATCTTACATCTTACTTACATCTTACATCTCCATCATCATCATTAGTCATCTTACTTATAGTCATCTCCTTACTCCATCTTACATCTCCTCCATCTTACTCCATTGG"
+kmer = repeat("N",8)
+dmax = 3
+
+genome="ACCACCCCAACAGGTTACCACCACCGTTGTCGTTACAGACCACAGGTTCCAACCGTTGTCACAGACAGGTCACCGTCCCACCAACCGTCACAGACAGCCAGTCGTTCCACCAACAGCCAGTCACAGGTCACCGTTGTCCCAACAGGTCGTTACCGTTACCGTTGTTACAGCCAGTCCCAGTTACCACCCCACCACCAACAGGTTGTCACAGGTTGTCACAGCCAGTTCCAGTCGTTACAGACCACAGCCAGTCACAGACAGCCAACAGGTTCCACCAGTCACCGTCGTTGTTACCACCGTCGTCACAGGTTGTTGTCACAGACAGACCCCACCACCACCAGTCACAGGTCACAGACCACCACCACAGGTCGTCACCACAGACAGGTC"
+kmer = repeat("N",9)
+dmax = 2
+
+
+dict = buildmerdict(genome,length(kmer));
+napprox = map( y-> count_d(dict,y[1],dmax), dict);
+apmax = maximum(napprox);
+kmax = collect(keys(dict))[find((x)->x==apmax,napprox)];
+
+#join(kmax," ")
+
+# Other shit
+alpha = ['A','G','T','C']
+alpha_try = reduce(vcat,map(x-> collect(permutations(x)),(combinations(alpha,dmax))))
+nsize = length(kmer)
+positions = combinations(range(1,nsize),dmax)
+kext = deepcopy(kmax)
+ktried = collect(keys(dict))
+#kext = ASCIIString[]
+
+for (x,y) in positions
+	println(x,"-",y)
+	for ktest in keys(dict)
+		ktmp = collect(ktest)
+		for p1=alpha, p2=alpha
+			#println(p1,p2)
+			ktmp[x] = p1
+			ktmp[y] = p2
+			kt = join(ktmp,"")
+			#if !haskey(dict,kt) && !in(kt,kext)
+			if !in(kt,ktried)
+				tmpcount = count_d(dict,kt,dmax)
+				push!(ktried,kt)
+				if  tmpcount >= apmax
+					if tmpcount > apmax
+						println("YIKES! ",apmax)
+						kext = ASCIIString[kt]
+						apmax = tmpcount
+					else
+						println(kt)
+						push!(kext,kt)
+					end
+				end
+			end
+		end
+	end
+end
+
+join(kext," ")
+
+# tmp = open(fout,"w+")
+# write(tmp,join(keep,' '))
+# close(tmp)
+
+
+
+

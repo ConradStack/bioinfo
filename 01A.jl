@@ -16,16 +16,18 @@ end
 
 # /Functions
 
-fname = "/Users/conrad/Downloads/dataset_2_6.txt"
+#fname = "/Users/conrad/Downloads/dataset_2_6.txt"
+fname = "/Users/conrad/courses/BioinformaticsOne/dataset_2_6_quiz.txt"
 
 
 # read the file
 fin = open(fname,"r")
-k = 9
-seekstart(fin)
-kmerdict = buildmerdict(fin,k)
-query = readline(fin)
-query = query[1:(end-1)]
+k = 3
+#seekstart(fin)
+kmerdict = buildmerdict(fin,k,oneline=true)
+# query = readline(fin)
+# query = query[1:(end-1)]
+query="TGT"
 close(fin)
 # close the filestream
 

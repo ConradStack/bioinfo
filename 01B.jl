@@ -1,7 +1,7 @@
 
 #using DataFrames
 
-require("/Users/conrad/courses/BioinformaticsOne/kmer.jl")
+require("/Users/conrad/courses/BioinformaticsOne/src/kmer.jl")
 
 
 # Functions

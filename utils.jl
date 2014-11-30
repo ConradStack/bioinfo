@@ -12,5 +12,3 @@ function clip(xx::ASCIIString)
 	return (xx[end]=='\n') ? xx[1:end-1] : xx
 end
 
-
-

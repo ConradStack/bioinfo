@@ -2,7 +2,8 @@
 
 require("/Users/conrad/courses/BioinformaticsOne/kmer.jl")
 #fname = "/Users/conrad/courses/BioinformaticsOne/01D_samp.txt"
-fname = "/Users/conrad/courses/BioinformaticsOne/rosalind_1d.txt"
+#fname = "/Users/conrad/courses/BioinformaticsOne/rosalind_1d.txt"
+fname = "/Users/conrad/courses/BioinformaticsOne/rosalind_1d_quiz.txt"
 fout = splitext(fname)[1]*".out"
 
 
